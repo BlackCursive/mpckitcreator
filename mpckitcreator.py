@@ -71,9 +71,13 @@ for i in range(0,28):
   print(f"{i} : {root[1][22][0][66][0][i]}")
   
 #  Loop through all the Sample Names in the program - 16 Pads - 8 Pad Banks A-D and E-H
-for i in range(0,127):
+pads = 127
+
+for i in range(0,pads):
   smpltxt = root[1][22][i][66][0][18].text
+  slcnd = root[1][22][i][66][0][24].text
   if smpltxt != None:
-    print(f"{i} : {smpltxt}")
+    print(f"{i} Sample Name : {smpltxt}")
+    print(f"{i} Slice End : {slcnd}")
   else:
     pass
