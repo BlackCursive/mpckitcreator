@@ -6,6 +6,15 @@ os.chdir(directory)
 
 # directory = os.getcwd()
 
+print("Return a dictionary of available formats.\n")
+sf.available_formats()
+
+print("Return a dictionary of available subtypes.\n")
+sf.available_subtypes('WAV')
+
+print("Return the default subtype for a given format.\n")
+sf.default_subtype('WAV')
+
 for filename in os.listdir(directory):
   if filename.endswith(".WAV") or filename.endswith(".wav"):
     with SoundFile(filename, 'r') as myfile:
