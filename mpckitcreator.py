@@ -70,6 +70,10 @@ print(f"SlicEnd Text- {root[1][22][0][66][0][24].text}\n")
 for i in range(0,28):
   print(f"{i} : {root[1][22][0][66][0][i]}")
   
-#  Loop through all the Sample Names in the program
-for i in range(0,128):
-  print(f"{i} : {root[1][22][i][66][0][18].text}")
+#  Loop through all the Sample Names in the program - 16 Pads - 8 Pad Banks A-D and E-H
+for i in range(0,127):
+  smpltxt = root[1][22][i][66][0][18].text
+  if smpltxt != None:
+    print(f"{i} : {smpltxt}")
+  else:
+    pass
