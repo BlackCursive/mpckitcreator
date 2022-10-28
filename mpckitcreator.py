@@ -65,3 +65,11 @@ print(f"SampleName - {root[1][22][0][66][0][18].tag}\n")
 print(f"SampleName Text- {root[1][22][0][66][0][18].text}\n")
 print(f"SliceEnd - {root[1][22][0][66][0][24].tag}\n")
 print(f"SlicEnd Text- {root[1][22][0][66][0][24].text}\n")
+
+# Loop through tags inside Layers
+for i in range(0,28):
+  print(f"{i} : {root[1][22][0][66][0][i]}")
+  
+#  Loop through all the Sample Names in the program
+for i in range(0,128):
+  print(f"{i} : {root[1][22][i][66][0][18].text}")
