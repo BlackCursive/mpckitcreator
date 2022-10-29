@@ -81,3 +81,22 @@ for i in range(0,pads):
     print(f"{i} Slice End : {slcnd}")
   else:
     pass
+
+  
+def write_smpl_list():
+pads = len(sample_list)
+for i in range(0,pads):
+  for sample in sample_list:
+    smplTxt = root[1][22][i][66][0][18].text
+    # slcEnd = root[1][22][i][66][0][24].text
+    smplTxt = sample
+    print(f"{i} : {sample}")
+    if smplTxt != None:
+      pass
+      # print(f"{i} Sample Name : {smplTxt}")
+      # print(f"{i} Slice End : {slcEnd}")
+    else:
+      pass
+    # tree.write('mac.xpm')
+
+write_smpl_list()
