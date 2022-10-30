@@ -1,17 +1,17 @@
 import os
+from random import sample
 from soundfile import SoundFile
 import xml.etree.ElementTree as ET
 
-tree = ET.parse('mpc.xpm')
-root = tree.getroot()
-
-directory = os.getcwd()
+directory_path = os.getcwd()
+folder_name = os.path.basename(directory_path)
 
 sample_list = []
 no_of_frames = []
 
+### Function to get Filename and Number of Samples from WAV files
 def wavFolder(folder):
-  for file in os.listdir(directory):
+  for file in os.listdir(directory_path):
     if file.endswith(".WAV") or file.endswith(".wav"):
       with SoundFile(file, 'r') as myfile:
         filename = myfile.name
@@ -20,36 +20,48 @@ def wavFolder(folder):
         no_of_frames.append(frames)
         # print(f"file = {sample_list}\n")
         # print(f"Number of Frames = {no_of_frames}\n")
-wavFolder(directory)
+wavFolder(directory_path)
 
+###
+with open("template.xml", "r") as templateFile:
+    template = templateFile.read()
 
-def write_smpl_list():
-  for layerNo, sample in zip(range(0, 128), range(len(sample_list))):
-    if sample != None:
-      SampleName = root[1][22][layerNo][66][0][18].text
-      SampleName = sample_list[sample]
-      # print(f"{sample} Sample Name : {smplTxt}")
-      SliceEnd = root[1][22][layerNo][66][0][24].text
-      SliceEnd = no_of_frames[sample]
-    else:
-      pass
-# write_smpl_list()
+template = template.replace('__PROGRAMNAME__', folder_name)
 
-# tree.write('new.xpm', encoding='utf-8')
+with open("instrument.xml", "r") as instrumentFile:
+    instrument = instrumentFile.read()
 
-# for i in range(0,128):
-#   print(f"Insrument Number - {root[1][22][i].attrib}\n")
+# for x, y in zip(sample_list, no_of_frames):
+#   # instrument = instrument.replace('__INSTNUMBER__', samplename)
+#   with open('test.xml', "a") as file:
+#     instrument = instrument.replace('__SAMPLENAME__', x).replace('__SLICEEND__', str(y))
+#     file.write(instrument)
 
+for count, x, y in zip(range(len(sample_list)),sample_list, no_of_frames):
+  with open('test.xml', "a") as file:
+    file.write(instrument.replace('__SAMPLENAME__', x).replace('__SLICEEND__', str(y)).replace('__INSTNUMBER__', str(count+1)))
+    file.write("\n")
+
+# instrumentandlayers = instrument.replace('__INSTRUMENTSANDLAYERS__')
+
+newFilename = folder_name + ".xpm"
+
+# with open(newFilename, "w") as file:
+#     file.write(template)
+    # file.write(instrument)
+
+###
+
+### Function to get Filename and Number of Samples from newly created Program kit
 def read_smpl_list(xpm):
   pads = 127
   tree = ET.parse(xpm)
   root = tree.getroot()
   for i in range(0,pads):
-    smplTxt = root[1][2][i][66][0][18].text
+    smplTxt = root[1][22][i][66][0][18].text
     slcEnd = root[1][22][i][66][0][24].text
     if smplTxt != None:
-      print(f"{i} Sample Name : {smplTxt}")
-      print(f"{i} Slice End : {slcEnd}")
+      print(f"{i+1} Sample Name : {smplTxt} / Slice End : {slcEnd}")
     else:
       pass
-read_smpl_list('new.xpm')
+# read_smpl_list(newFilename)
