@@ -2,101 +2,54 @@ import os
 from soundfile import SoundFile
 import xml.etree.ElementTree as ET
 
-directory = '/content/drive/MyDrive/Colab Notebooks/wav_converter/'
-os.chdir(directory)
-
-# directory = os.getcwd()
-
-print("Return a dictionary of available formats.\n")
-sf.available_formats()
-
-print("Return a dictionary of available subtypes.\n")
-sf.available_subtypes('WAV')
-
-print("Return the default subtype for a given format.\n")
-sf.default_subtype('WAV')
-
-### List files from directory with Resolution, Channel, Sample Rate and Number of Sample ### 
-
-for filename in os.listdir(directory):
-  if filename.endswith(".WAV") or filename.endswith(".wav"):
-    with SoundFile(filename, 'r') as myfile:
-      print(f"Filename = {myfile.name}")
-      print(f"Number of Samples = {myfile.frames-1}")
-      print(f"Sample Rate = {myfile.samplerate} Hz")
-      if myfile.subtype == 'PCM_16':
-        print(f"Resolution = 16 bits")
-      if myfile.subtype == 'PCM_24':
-        print(f"Resolution = 24 bits")
-      if myfile.subtype == 'PCM_32' or  myfile.subtype == 'FLOAT':
-        print(f"Resolution = 32 bits")
-      if myfile.channels == 2:
-        print(f"Channels = Stereo \n")
-      else:
-        print(f"Channels = Mono \n")
-        
-### Import MPC *.xpm file and figure out XML Structure ### 
-
 tree = ET.parse('mpc.xpm')
 root = tree.getroot()
 
-print(root)
-print(root[0])
-print(root[1])
+directory = os.getcwd()
 
-for i in root[1]:
-  print(i.tag, i.attrib)
+sample_list = []
+no_of_frames = []
 
-for i in root[0][1]:
-  print(i.text)
-  
-print(f"Root - {root}\n")
-print(f"File Version - {root[0][0].text}\n")
-print(f"Application_Version - {root[0][1].text}\n")
-print(f"Program Name - {root[1][0].text}\n")
-print(f"Element - {root[1][22].tag}\n")
-print(f"Instrument - {root[1][22][0].tag}\n")
-print(f"Insrument Number - {root[1][22][0].attrib}\n")
-print(f"Layers - {root[1][22][0][66].tag}\n")
-print(f"Layer - {root[1][22][0][66][0].tag}\n")
-print(f"Layer Number - {root[1][22][0][66][0].attrib}\n")
-print(f"Layer Number - {root[1][22][0][66][1].attrib}\n")
-print(f"SampleName - {root[1][22][0][66][0][18].tag}\n")
-print(f"SampleName Text- {root[1][22][0][66][0][18].text}\n")
-print(f"SliceEnd - {root[1][22][0][66][0][24].tag}\n")
-print(f"SlicEnd Text- {root[1][22][0][66][0][24].text}\n")
+def wavFolder(folder):
+  for file in os.listdir(directory):
+    if file.endswith(".WAV") or file.endswith(".wav"):
+      with SoundFile(file, 'r') as myfile:
+        filename = myfile.name
+        sample_list.append(filename)
+        frames = myfile.frames-1
+        no_of_frames.append(frames)
+        # print(f"file = {sample_list}\n")
+        # print(f"Number of Frames = {no_of_frames}\n")
+wavFolder(directory)
 
-# Loop through tags inside Layers
-for i in range(0,28):
-  print(f"{i} : {root[1][22][0][66][0][i]}")
-  
-#  Loop through all the Sample Names in the program - 16 Pads - 8 Pad Banks A-D and E-H
-pads = 127
 
-for i in range(0,pads):
-  smpltxt = root[1][22][i][66][0][18].text
-  slcnd = root[1][22][i][66][0][24].text
-  if smpltxt != None:
-    print(f"{i} Sample Name : {smpltxt}")
-    print(f"{i} Slice End : {slcnd}")
-  else:
-    pass
-
-  
 def write_smpl_list():
-pads = len(sample_list)
-for i in range(0,pads):
-  for sample in sample_list:
-    smplTxt = root[1][22][i][66][0][18].text
-    # slcEnd = root[1][22][i][66][0][24].text
-    smplTxt = sample
-    print(f"{i} : {sample}")
-    if smplTxt != None:
-      pass
-      # print(f"{i} Sample Name : {smplTxt}")
-      # print(f"{i} Slice End : {slcEnd}")
+  for layerNo, sample in zip(range(0, 128), range(len(sample_list))):
+    if sample != None:
+      SampleName = root[1][22][layerNo][66][0][18].text
+      SampleName = sample_list[sample]
+      # print(f"{sample} Sample Name : {smplTxt}")
+      SliceEnd = root[1][22][layerNo][66][0][24].text
+      SliceEnd = no_of_frames[sample]
     else:
       pass
-    # tree.write('mac.xpm')
+# write_smpl_list()
 
-write_smpl_list()
+# tree.write('new.xpm', encoding='utf-8')
+
+# for i in range(0,128):
+#   print(f"Insrument Number - {root[1][22][i].attrib}\n")
+
+def read_smpl_list(xpm):
+  pads = 127
+  tree = ET.parse(xpm)
+  root = tree.getroot()
+  for i in range(0,pads):
+    smplTxt = root[1][2][i][66][0][18].text
+    slcEnd = root[1][22][i][66][0][24].text
+    if smplTxt != None:
+      print(f"{i} Sample Name : {smplTxt}")
+      print(f"{i} Slice End : {slcEnd}")
+    else:
+      pass
+read_smpl_list('new.xpm')
