@@ -2,7 +2,6 @@ import os
 from soundfile import SoundFile
 
 directory_path = os.getcwd()
-folder_name = os.path.basename(directory_path)
 
 sample_list = []
 no_of_frames = []
@@ -18,5 +17,5 @@ def wavFolder(folder):
         sample_list.append(filename)
         frames = myfile.frames-1
         no_of_frames.append(frames)
-        print(f"{count} - Sample Name: {filename} / No. of Frames: {frames}")
+        # print(f"{count} - Sample Name: {filename} / No. of Frames: {frames}")
 wavFolder(directory_path)
