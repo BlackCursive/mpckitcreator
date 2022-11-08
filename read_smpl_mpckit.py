@@ -11,6 +11,7 @@ with open(xpm, 'r') as f:
 soup = BeautifulSoup(data, "xml")
 
 def clear():
+    # check and make call for specific operating system
     _ = call('clear' if os.name == 'posix' else 'cls')
 clear()
 
