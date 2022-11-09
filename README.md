@@ -9,6 +9,19 @@ Tool to create an Akai MPC program with wave files - MPC Live 1/2, MPC X or MPC 
 -- SoundFile
 
 -- BeautifulSoup
+
+-------------
+### Installation 
+#### Check your version of Python and upgrade if necessary
+```bash
+python3 --version
+```
+
+#### Clone repository
+```bash
+git clone https://github.com/BlackCursive/mpckitcreator.git
+cd mpckitcreator
+```
 ____
 #### Create MPC Program from the wav files in the current directory
 ```shell
